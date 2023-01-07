@@ -1,33 +1,60 @@
-//created by Siddharth Kadu
-//prn:2030331245052
-import random #random module to get random integers to create OTP
-import inputInf #email and password of sender from another file
-import smtplib #simple message transfer protocol#library to send email to users email address
 
-n=6
-def generate_otp(n):
-    OTP=""
-    for i in range(n):
-        OTP+=str(random.randint(0,9)) 
-    return (OTP)
+import random
+import smtplib
+# importing data from filew
+# file = open("data.txt", "r")
 
-server =smtplib.SMTP('smtp.gmail.com',587)
+# By using file handling we can access/import the data from another file
 
-Senders_email = inputInf.email
-Senders_password= inputInf.password
+Sender_email = "siddharthkadu2001@gmail.com"
+Sender_pass = "qkjwtopzuwysroij"
 
-def login_into_sendersemail():
-    server.starttls()
-    server.login(Senders_email, password=Senders_password) 
-receivers_name=input("Enter receivers name ")
-receivers_email=input("Enter receivers email ")
+def Send_OTP(Otp):
+    # Getting mail_id from user that whom user wana send otp
+    recevicer_mail = input("Enter Recevicers-Email id: ")
+    if ("@gmail.com" in recevicer_mail):
+        message = "Your OTP is " + Otp
+        server.sendmail(Sender_email, recevicer_mail,"Subject:OTP \n" + message)
+        print("Congratulation!! 🥳Your OTP Generates Successfully🥳")
+    else:
+        print("You entered an Invalid Email!!!!🥵🥵")
 
-def send_email():
-    login_into_sendersemail()
-    otp_var=generate_otp(n)
-    msg=("Hi "+ receivers_name +"\n"+ str(otp_var)+" is your OTP ")
-    print (msg)
-    server.sendmail (Senders_email, receivers_email,msg)
-    server.quit() 
-    print("email has been sent!")
-send_email()
+def Generate_Otp():
+    print("Press 1 for only Numeric OTP.")
+    print("Press 2 for Both.")
+    User_input = int(input("Enter: "))
+
+    # if user wants only numeric otp then if will run
+    if (User_input == 1):
+        length_of_otp = int(input("Enter the length of OTP: "))
+        Otp = ""
+        for i in range(length_of_otp):
+            Random_NO = random.randint(0, 9)
+            Otp = Otp + str(Random_NO)
+        Send_OTP(Otp)
+    # if user wants both numeric and char then else part will run
+    else:
+        length_of_otp = int(input("Enter the length of OTP: "))
+        Otp = ""
+        if (length_of_otp % 2 == 0):
+            for i in range(int(length_of_otp / 2)):
+                Random_no = random.randint(0, 9)
+                Random_char = random.randint(97, 123)
+                convert_NtC = chr(Random_char)
+                Otp = Otp + str(Random_no) + convert_NtC
+            Send_OTP(Otp)
+        else:
+            for i in range((int(length_of_otp / 2))):
+                Random_no = random.randint(0, 9)
+                Random_char = random.randint(97, 123)
+                convert_NtC = chr(Random_char)
+                Otp = Otp + str(Random_no) + convert_NtC
+            Otp = Otp + chr(random.randint(97, 123))
+            Send_OTP(Otp)
+server = smtplib.SMTP("smtp.gmail.com", 587)
+server.starttls()
+
+# By using server.login function we can login to that particular login
+server.login(Sender_email, Sender_pass)
+Generate_Otp()
+server.close()
