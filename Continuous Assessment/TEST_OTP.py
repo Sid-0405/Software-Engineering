@@ -1,26 +1,15 @@
-//created by Siddharth Kadu
-//prn:2030331245052
-  import random #random module to get random integers to create OTP
-import inputInf #email and password of sender from another file
-import smtplib #simple message transfer protocol#library to send email to users email address
 
-n=6
-OTP=""
-for i in range(n):
-    OTP+=str(random.randint(0,9))
+from otpgeneratorV1 import Send_OTP
+from otpgeneratorV1 import Generate_Otp
+import unittest
 
-server =smtplib.SMTP('smtp.gmail.com',587)
-Senders_email = inputInf.email
-Senders_password= inputInf.password
+class TestOtp(unittest.TestCase):
+    def test_1(self):
+        email = "siddharthkadu2001@gmail.com" #for validating email
+        if "@gmail.com" in email:
+            print("Validate Email🥳🎉👍😊")
+        else:
+            print("Invalid Email🥵😥")
 
-server.starttls()
-server.login(Senders_email, password=Senders_password) 
-
-receivers_name=input("Enter receivers name ")
-receivers_email=input("Enter receivers email ")
-
-msg=("Hi "+ receivers_name +"\n"+ str(OTP)+" is your OTP ")
-print (msg)
-server.sendmail (Senders_email, receivers_email,msg)
-server.quit() 
-print("email has been sent!")
+if __name__ ==  '__main':
+        unittest.main()
